@@ -112,12 +112,12 @@ class AslDb:
             if str_tag != b"\x00\x01":
                 raise AslDbError("String field does not begin with \x00\x01")
             str_len, = struct.unpack(">I", self.f.read(4))
-            string = self.f.read(str_len - 1).decode() # minus 1 as it is nul-terminated
+            string = self.f.read(str_len - 1)#.decode() # minus 1 as it is nul-terminated
         else:
             # is embedded
             str_bytes = struct.pack(">Q", val)
-            str_len = str_bytes[0] & 0x7F
-            string = str_bytes[1:1+str_len].decode()
+            str_len = ord(str_bytes[0]) & 0x7F
+            string = str_bytes[1:1+str_len]#.decode()
         return string
 
     def _parse_record(self, offset):
